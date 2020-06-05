@@ -16,9 +16,8 @@
 
 package com.google.samples.apps.sunflower.data
 
-class GardenPlantingRepository private constructor(
-    private val gardenPlantingDao: GardenPlantingDao
-) {
+class GardenPlantingRepository
+constructor(private val gardenPlantingDao: GardenPlantingDao) {
 
     suspend fun createGardenPlanting(plantId: String) {
         val gardenPlanting = GardenPlanting(plantId)
@@ -34,14 +33,14 @@ class GardenPlantingRepository private constructor(
 
     fun getPlantedGardens() = gardenPlantingDao.getPlantedGardens()
 
-    companion object {
-
-        // For Singleton instantiation
-        @Volatile private var instance: GardenPlantingRepository? = null
-
-        fun getInstance(gardenPlantingDao: GardenPlantingDao) =
-                instance ?: synchronized(this) {
-                    instance ?: GardenPlantingRepository(gardenPlantingDao).also { instance = it }
-                }
-    }
+//    companion object {
+//
+//        // For Singleton instantiation
+//        @Volatile private var instance: GardenPlantingRepository? = null
+//
+//        fun getInstance(gardenPlantingDao: GardenPlantingDao) =
+//                instance ?: synchronized(this) {
+//                    instance ?: GardenPlantingRepository(gardenPlantingDao).also { instance = it }
+//                }
+//    }
 }
