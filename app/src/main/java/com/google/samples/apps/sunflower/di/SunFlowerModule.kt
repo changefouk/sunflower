@@ -25,6 +25,8 @@ import androidx.work.WorkManager
 import com.google.samples.apps.sunflower.data.AppDatabase
 import com.google.samples.apps.sunflower.data.GardenPlantingRepository
 import com.google.samples.apps.sunflower.data.PlantRepository
+import com.google.samples.apps.sunflower.mvpdemo.PlantListContract
+import com.google.samples.apps.sunflower.mvpdemo.PlantListPresenterImpl
 import com.google.samples.apps.sunflower.utilities.DATABASE_NAME
 import com.google.samples.apps.sunflower.viewmodels.GardenPlantingListViewModel
 import com.google.samples.apps.sunflower.viewmodels.GardenPlantingListViewModelFactory
@@ -61,4 +63,8 @@ val viewModelModule = module {
     viewModel { GardenPlantingListViewModel(get()) }
     viewModel { (plantId: String) -> PlantDetailViewModel(get(), get(), plantId) }
     viewModel { (handle: SavedStateHandle) -> PlantListViewModel(get(), handle) }
+}
+
+val presenterModule = module {
+    factory<PlantListContract.Presenter> { PlantListPresenterImpl(get()) }
 }

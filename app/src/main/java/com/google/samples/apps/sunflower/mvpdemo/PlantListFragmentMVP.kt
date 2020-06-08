@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Google LLC
+ * Copyright 2020 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,34 +14,49 @@
  * limitations under the License.
  */
 
-package com.google.samples.apps.sunflower
+package com.google.samples.apps.sunflower.mvpdemo
 
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.observe
+import com.google.samples.apps.sunflower.R
 import com.google.samples.apps.sunflower.adapters.PlantAdapter
+import com.google.samples.apps.sunflower.data.Plant
 import com.google.samples.apps.sunflower.databinding.FragmentPlantListBinding
-import com.google.samples.apps.sunflower.viewmodels.PlantListViewModel
-import org.koin.androidx.viewmodel.ext.android.stateViewModel
+import org.koin.android.ext.android.inject
 
-class PlantListFragment : Fragment() {
+class PlantListFragmentMVP : Fragment(), PlantListContract.View {
 
-    private val viewModel: PlantListViewModel by stateViewModel()
+    private var growZone = NO_GROW_ZONE
 
-    override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?): View? {
+    private val adapter = PlantAdapter()
+
+    private val presenter: PlantListContract.Presenter by inject()
+
+    companion object {
+        const val NO_GROW_ZONE = -1
+        private const val GROW_ZONE_SAVED_STATE_KEY = "GROW_ZONE_SAVED_STATE_KEY"
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding = FragmentPlantListBinding.inflate(inflater, container, false)
         context ?: return binding.root
-
-        val adapter = PlantAdapter()
         binding.plantList.adapter = adapter
-        subscribeUi(adapter)
+
+        savedInstanceState?.let {
+            growZone = it.getInt(GROW_ZONE_SAVED_STATE_KEY, NO_GROW_ZONE)
+        }
+
+        presenter.subscribe(this)
+        presenter.getPlant(growZone)
 
         setHasOptionsMenu(true)
         return binding.root
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putInt(GROW_ZONE_SAVED_STATE_KEY, growZone)
+        super.onSaveInstanceState(outState)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -51,26 +66,20 @@ class PlantListFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.filter_zone -> {
-                updateData()
+                presenter.filtered(growZone)
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
     }
 
-    private fun subscribeUi(adapter: PlantAdapter) {
-        viewModel.plants.observe(viewLifecycleOwner) { plants ->
-            adapter.submitList(plants)
-        }
+    override fun updatePlantAdapter(plantList: List<Plant>) {
+        adapter.submitList(plantList)
     }
 
-    private fun updateData() {
-        with(viewModel) {
-            if (isFiltered()) {
-                clearGrowZoneNumber()
-            } else {
-                setGrowZoneNumber(9)
-            }
-        }
+    override fun updateGrowZoneNumber(growZone: Int) {
+        this.growZone = growZone
+        presenter.getPlant(growZone)
     }
+
 }

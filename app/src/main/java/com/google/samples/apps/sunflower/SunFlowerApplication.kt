@@ -18,6 +18,7 @@ package com.google.samples.apps.sunflower
 
 import android.app.Application
 import com.google.samples.apps.sunflower.di.appModule
+import com.google.samples.apps.sunflower.di.presenterModule
 import com.google.samples.apps.sunflower.di.viewModelModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -30,7 +31,7 @@ class SunFlowerApplication : Application() {
         startKoin {
             androidLogger()
             androidContext(this@SunFlowerApplication)
-            modules(appModule + viewModelModule)
+            modules(appModule + viewModelModule + presenterModule)
         }
     }
 

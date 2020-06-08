@@ -16,6 +16,11 @@
 
 package com.google.samples.apps.sunflower.data
 
+import io.reactivex.Single
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
+
+
 /**
  * Repository module for handling data operations.
  */
@@ -27,6 +32,18 @@ class PlantRepository constructor(private val plantDao: PlantDao) {
 
     fun getPlantsWithGrowZoneNumber(growZoneNumber: Int) =
             plantDao.getPlantsWithGrowZoneNumber(growZoneNumber)
+
+    fun getListPlants(): Single<List<Plant>> =
+            plantDao.getListPlants()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+
+
+    fun getPlantsListWithGrowZoneNumber(growZoneNumber: Int): Single<List<Plant>> =
+            plantDao.getListPlantsWithGrowZoneNumber(growZoneNumber)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+
 
 //    companion object {
 //

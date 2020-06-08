@@ -21,6 +21,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import io.reactivex.Single
 
 /**
  * The Data Access Object for the Plant class.
@@ -32,6 +33,12 @@ interface PlantDao {
 
     @Query("SELECT * FROM plants WHERE growZoneNumber = :growZoneNumber ORDER BY name")
     fun getPlantsWithGrowZoneNumber(growZoneNumber: Int): LiveData<List<Plant>>
+
+    @Query("SELECT * FROM plants ORDER BY name")
+    fun getListPlants(): Single<List<Plant>>
+
+    @Query("SELECT * FROM plants WHERE growZoneNumber = :growZoneNumber ORDER BY name")
+    fun getListPlantsWithGrowZoneNumber(growZoneNumber: Int): Single<List<Plant>>
 
     @Query("SELECT * FROM plants WHERE id = :plantId")
     fun getPlant(plantId: String): LiveData<Plant>

@@ -51,7 +51,7 @@ android {
 }
 
 dependencies {
-    kapt "androidx.room:room-compiler:$rootProject.roomVersion"
+
     kapt "com.github.bumptech.glide:compiler:$rootProject.glideVersion"
     implementation "androidx.appcompat:appcompat:$rootProject.appCompatVersion"
     implementation "androidx.constraintlayout:constraintlayout:$rootProject.constraintLayoutVersion"
@@ -63,8 +63,7 @@ dependencies {
     implementation "androidx.navigation:navigation-fragment-ktx:$rootProject.navigationVersion"
     implementation "androidx.navigation:navigation-ui-ktx:$rootProject.navigationVersion"
     implementation "androidx.recyclerview:recyclerview:$rootProject.recyclerViewVersion"
-    implementation "androidx.room:room-runtime:$rootProject.roomVersion"
-    implementation "androidx.room:room-ktx:$rootProject.roomVersion"
+
     implementation "androidx.viewpager2:viewpager2:$rootProject.viewPagerVersion"
     implementation "androidx.work:work-runtime-ktx:$rootProject.workVersion"
     implementation "com.github.bumptech.glide:glide:$rootProject.glideVersion"
@@ -73,6 +72,14 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$rootProject.kotlinVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$rootProject.coroutinesVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$rootProject.coroutinesVersion"
+
+    kapt "androidx.room:room-compiler:$rootProject.roomVersion"
+    implementation "androidx.room:room-runtime:$rootProject.roomVersion"
+    implementation "androidx.room:room-ktx:$rootProject.roomVersion"
+    implementation "androidx.room:room-rxjava2:$rootProject.roomVersion"
+
+    implementation "io.reactivex.rxjava2:rxjava:$rootProject.rxJavaVersion"
+    implementation "io.reactivex.rxjava2:rxandroid:$rootProject.rxAndroidVersion"
 
     // Koin AndroidX ViewModel features
     implementation "org.koin:koin-androidx-viewmodel:$koinVersion"
