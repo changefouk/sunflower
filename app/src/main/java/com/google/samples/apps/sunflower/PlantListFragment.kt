@@ -38,7 +38,7 @@ class PlantListFragment : Fragment() {
 
         val adapter = PlantAdapter()
         binding.plantList.adapter = adapter
-        subscribeUi(adapter)
+        subscribeUi(adapter, binding)
 
         setHasOptionsMenu(true)
         return binding.root
@@ -51,26 +51,19 @@ class PlantListFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.filter_zone -> {
-                updateData()
+                with(viewModel) {
+                    filterGrowZone()
+                }
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
     }
 
-    private fun subscribeUi(adapter: PlantAdapter) {
+    private fun subscribeUi(adapter: PlantAdapter, binding: FragmentPlantListBinding) {
         viewModel.plants.observe(viewLifecycleOwner) { plants ->
+            binding.hasPlantList = !plants.isNullOrEmpty()
             adapter.submitList(plants)
-        }
-    }
-
-    private fun updateData() {
-        with(viewModel) {
-            if (isFiltered()) {
-                clearGrowZoneNumber()
-            } else {
-                setGrowZoneNumber(9)
-            }
         }
     }
 }

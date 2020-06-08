@@ -18,6 +18,7 @@ package com.google.samples.apps.sunflower.mvpdemo
 
 import com.google.samples.apps.sunflower.data.PlantRepository
 import io.reactivex.disposables.CompositeDisposable
+import kotlin.random.Random
 
 class PlantListPresenterImpl(
         private val plantRepository: PlantRepository)
@@ -51,7 +52,7 @@ class PlantListPresenterImpl(
         if (growZone != PlantListFragmentMVP.NO_GROW_ZONE) {
             view?.updateGrowZoneNumber(PlantListFragmentMVP.NO_GROW_ZONE)
         } else {
-            view?.updateGrowZoneNumber(9)
+            view?.updateGrowZoneNumber(Random.nextInt(1, 10))
         }
     }
 

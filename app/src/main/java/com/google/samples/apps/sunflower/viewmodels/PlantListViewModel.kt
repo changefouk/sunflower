@@ -16,21 +16,18 @@
 
 package com.google.samples.apps.sunflower.viewmodels
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.switchMap
+import androidx.lifecycle.*
 import com.google.samples.apps.sunflower.PlantListFragment
 import com.google.samples.apps.sunflower.data.Plant
 import com.google.samples.apps.sunflower.data.PlantRepository
+import kotlin.random.Random
 
 /**
  * The ViewModel for [PlantListFragment].
  */
 class PlantListViewModel internal constructor(
-    plantRepository: PlantRepository,
-    private val savedStateHandle: SavedStateHandle
+        plantRepository: PlantRepository,
+        private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     val plants: LiveData<List<Plant>> = getSavedGrowZoneNumber().switchMap {
@@ -41,11 +38,19 @@ class PlantListViewModel internal constructor(
         }
     }
 
-    fun setGrowZoneNumber(num: Int) {
+    fun filterGrowZone() {
+        if (isFiltered()) {
+            clearGrowZoneNumber()
+        } else {
+            setGrowZoneNumber(Random.nextInt(1, 10))
+        }
+    }
+
+    private fun setGrowZoneNumber(num: Int) {
         savedStateHandle.set(GROW_ZONE_SAVED_STATE_KEY, num)
     }
 
-    fun clearGrowZoneNumber() {
+    private fun clearGrowZoneNumber() {
         savedStateHandle.set(GROW_ZONE_SAVED_STATE_KEY, NO_GROW_ZONE)
     }
 

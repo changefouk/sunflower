@@ -18,6 +18,7 @@ package com.google.samples.apps.sunflower.mvpdemo
 
 import android.os.Bundle
 import android.view.*
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.google.samples.apps.sunflower.R
 import com.google.samples.apps.sunflower.adapters.PlantAdapter
@@ -27,8 +28,8 @@ import org.koin.android.ext.android.inject
 
 class PlantListFragmentMVP : Fragment(), PlantListContract.View {
 
+    private var binding: FragmentPlantListBinding? = null
     private var growZone = NO_GROW_ZONE
-
     private val adapter = PlantAdapter()
 
     private val presenter: PlantListContract.Presenter by inject()
@@ -39,9 +40,11 @@ class PlantListFragmentMVP : Fragment(), PlantListContract.View {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding = FragmentPlantListBinding.inflate(inflater, container, false)
-        context ?: return binding.root
-        binding.plantList.adapter = adapter
+        val fragmentPlantListBinding: FragmentPlantListBinding = DataBindingUtil.inflate(inflater,
+                R.layout.fragment_plant_list, container, false)
+
+        context ?: return fragmentPlantListBinding.root
+        fragmentPlantListBinding.plantList.adapter = adapter
 
         savedInstanceState?.let {
             growZone = it.getInt(GROW_ZONE_SAVED_STATE_KEY, NO_GROW_ZONE)
@@ -51,7 +54,9 @@ class PlantListFragmentMVP : Fragment(), PlantListContract.View {
         presenter.getPlant(growZone)
 
         setHasOptionsMenu(true)
-        return binding.root
+
+        this.binding = fragmentPlantListBinding
+        return fragmentPlantListBinding.root
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -74,6 +79,7 @@ class PlantListFragmentMVP : Fragment(), PlantListContract.View {
     }
 
     override fun updatePlantAdapter(plantList: List<Plant>) {
+        binding?.hasPlantList = !plantList.isNullOrEmpty()
         adapter.submitList(plantList)
     }
 
