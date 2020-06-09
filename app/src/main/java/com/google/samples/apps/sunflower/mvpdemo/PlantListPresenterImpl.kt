@@ -16,21 +16,32 @@
 
 package com.google.samples.apps.sunflower.mvpdemo
 
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.OnLifecycleEvent
 import com.google.samples.apps.sunflower.data.PlantRepository
 import io.reactivex.disposables.CompositeDisposable
+import java.util.concurrent.Callable
 import kotlin.random.Random
 
 class PlantListPresenterImpl(
         private val plantRepository: PlantRepository)
-    : PlantListContract.Presenter {
+    : PlantListContract.Presenter,
+        LifecycleObserver {
 
     private var view: PlantListContract.View? = null
     private val disposeBag = CompositeDisposable()
 
     override fun subscribe(view: PlantListContract.View) {
         this.view = view
+        /**
+         * for lifecycle awareness
+         * */
+        (this.view as? LifecycleOwner)?.lifecycle?.addObserver(this)
     }
 
+    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     override fun unSubscribe() {
         disposeBag.clear()
         view = null

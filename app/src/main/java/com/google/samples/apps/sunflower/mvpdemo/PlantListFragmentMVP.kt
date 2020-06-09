@@ -20,13 +20,14 @@ import android.os.Bundle
 import android.view.*
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LifecycleOwner
 import com.google.samples.apps.sunflower.R
 import com.google.samples.apps.sunflower.adapters.PlantAdapter
 import com.google.samples.apps.sunflower.data.Plant
 import com.google.samples.apps.sunflower.databinding.FragmentPlantListBinding
 import org.koin.android.ext.android.inject
 
-class PlantListFragmentMVP : Fragment(), PlantListContract.View {
+class PlantListFragmentMVP : Fragment(), PlantListContract.View, LifecycleOwner {
 
     private var binding: FragmentPlantListBinding? = null
     private var growZone = NO_GROW_ZONE
